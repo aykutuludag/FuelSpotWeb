@@ -1,37 +1,20 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import config from './Config';
 
-class GoogleLogin extends Component{
-    constructor(props) {
-        super(props)
-    }
-
-    componentDidMount(){
-        (function() {
-            var e = document.createElement("script");
-            e.type = "text/javascript";
-            e.async = true;
-            e.src = "https://apis.google.com/js/client:platform.js?onload=gPOnLoad";
-            var t = document.getElementsByTagName("script")[0];
-            t.parentNode.insertBefore(e, t)
-        })();
-    }
-
+class GoogleLogin extends Component {
     //Triggering login for google
     googleLogin = () => {
         let response = null;
         window.gapi.auth.signIn({
-            callback: function(authResponse) {
-                this.googleSignInCallback( authResponse )
-            }.bind( this ),
+            callback: function (authResponse) {
+                this.googleSignInCallback(authResponse)
+            }.bind(this),
             clientid: config.google, //Google client Id
             cookiepolicy: "single_host_origin",
             requestvisibleactions: "http://schema.org/AddAction",
             scope: "https://www.googleapis.com/auth/plus.login email"
         });
     };
-
-
     googleSignInCallback = (authResult) => {
 
         var _root = this;
@@ -58,39 +41,32 @@ class GoogleLogin extends Component{
             console.log('Sign-in state: ' + authResult['error']);
         }
     };
-
-
-
-
-    // GOOGLE İLE GİRİŞ YAPILDI
-    //
-
     getUserGoogleProfile = (user) => {
 
         console.log(user);
 
-        var name        = user.name;
-        var username    = name.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s/g, '');
-        var email       = user.email;
-        var photo       = user.picture;
+        var name = user.name;
+        var username = name.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s/g, '');
+        var email = user.email;
+        var photo = user.picture;
 
         var url;
 
         console.log(this.props);
 
 
-        if( this.props.userType == "REGULAR_USER" ) {
+        if (this.props.userType == "REGULAR_USER") {
             url = "https://fuel-spot.com/api/user-create.php";
         }
 
-        if( this.props.userType == "SUPER_USER" ) {
+        if (this.props.userType == "SUPER_USER") {
             url = "https://fuel-spot.com/api/superuser-create.php";
         }
 
         const body = "username=" + username + "&name=" + name + "&email=" + email + "&photo=" + photo + "&AUTH_KEY=Ph76g0MSZ2okeWQmShYDlXakjgjhbe";
-        const params ={
+        const params = {
             headers: {
-                "content-type" : "application/x-www-form-urlencoded"
+                "content-type": "application/x-www-form-urlencoded"
             },
             body: body,
             method: "POST"
@@ -101,7 +77,7 @@ class GoogleLogin extends Component{
             .then(response => response.json())
             .then(
                 (result) => {
-                    this.props.cb( result );
+                    this.props.cb(result);
 
                     //const url = "https://fuel-spot.com/api/user-fetch.php";
                     //const body = "username=" + username + "&AUTH_KEY=Ph76g0MSZ2okeWQmShYDlXakjgjhbe";
@@ -130,7 +106,7 @@ class GoogleLogin extends Component{
                 }
             )
             .catch(err => {
-                if ( err.name === "AbortError" ) {
+                if (err.name === "AbortError") {
                     console.error("Fetch aborted, User create api hatası.", err)
                 } else {
                     console.error("Dönen kullanıcı verisi JSON değil", err)
@@ -138,16 +114,30 @@ class GoogleLogin extends Component{
             })
 
 
-
-
     };
 
+    constructor(props) {
+        super(props)
+    }
 
 
+    // GOOGLE İLE GİRİŞ YAPILDI
+    //
 
-    render(){
-        return(
-            <button className="btn btn-danger"  onClick={ () => this.googleLogin()} >
+    componentDidMount() {
+        (function () {
+            var e = document.createElement("script");
+            e.type = "text/javascript";
+            e.async = true;
+            e.src = "https://apis.google.com/js/client:platform.js?onload=gPOnLoad";
+            var t = document.getElementsByTagName("script")[0];
+            t.parentNode.insertBefore(e, t)
+        })();
+    }
+
+    render() {
+        return (
+            <button className="btn btn-danger" onClick={() => this.googleLogin()}>
                 Google ile giriş yap
             </button>
         )

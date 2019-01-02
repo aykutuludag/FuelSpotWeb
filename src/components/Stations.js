@@ -1,18 +1,11 @@
 import React, {Component} from 'react';
-import ReactDOM from 'react-dom';
 
 import {connect} from 'react-redux';
-import {activateGeod} from '../redux';
-import {activateStation} from '../redux';
+import {activateGeod, activateStation} from '../redux';
 
 import {GoogleApiWrapper, Map, Marker} from 'google-maps-react';
-import ReactStreetview from 'react-streetview';
 
 import _ from 'lodash';
-import {FuelSpotStationAdd} from '../services/FuelSpotStationAdd';
-
-
-import IconRestaurant from '../restaurant.svg';
 
 
 const mapStyles = {
@@ -24,11 +17,46 @@ const mapStyles = {
 
 
 export class MapContainer extends Component {
+    onMarkerClick = (property, marker, e) => {
+        this.openStationInfo(property.id);
+        const {google} = this.props;
+        const maps = google.maps;
+
+        let center = new maps.LatLng(property.position.lat, property.position.lng);
+        const map = property.map;
+        map.panTo(center);
+    };
+    openStationInfo = (id) => {
+        this.props.activateGeod({
+            active: id
+        });
+    };
+    onMapClicked = (props) => {
+        this.props.activateGeod({
+            active: null
+        });
+
+    };
+
     constructor(props) {
         super(props);
         this.state = {
             vehicles: false
         };
+    }
+
+    static onMapReady(mapProps, map) {
+        const {google} = mapProps;
+        var cityCircle = new google.maps.Circle({
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.4,
+            strokeWeight: 2,
+            fillColor: '#FF0000',
+            fillOpacity: 0.05,
+            map: map,
+            center: {lat: this.lat, lng: this.lng},
+            radius: 2500
+        });
     }
 
     componentDidMount() {
@@ -66,20 +94,6 @@ export class MapContainer extends Component {
         navigator.geolocation.getCurrentPosition(success, error);
     }
 
-    static onMapReady(mapProps, map) {
-        const {google} = mapProps;
-        var cityCircle = new google.maps.Circle({
-            strokeColor: '#FF0000',
-            strokeOpacity: 0.4,
-            strokeWeight: 2,
-            fillColor: '#FF0000',
-            fillOpacity: 0.05,
-            map: map,
-            center: {lat: this.lat, lng: this.lng},
-            radius: 2500
-        });
-    }
-
     fetchPlaces() {
         const url = "https://fuel-spot.com/api/station-search.php";
         const body = "location=" + this.state.lat + ";" + this.state.lng + "&radius=2500&AUTH_KEY=Ph76g0MSZ2okeWQmShYDlXakjgjhbe";
@@ -105,7 +119,6 @@ export class MapContainer extends Component {
                 }
             );
     }
-
 
     addGlobalFuelSpotStations(station) {
 
@@ -135,33 +148,6 @@ export class MapContainer extends Component {
 
 
     }
-
-
-    onMarkerClick = (property, marker, e) => {
-        this.openStationInfo(property.id);
-        const {google} = this.props;
-        const maps = google.maps;
-
-        let center = new maps.LatLng(property.position.lat, property.position.lng);
-        const map = property.map;
-        map.panTo(center);
-    };
-
-
-    openStationInfo = (id) => {
-        this.props.activateGeod({
-            active: id
-        });
-    };
-
-
-    onMapClicked = (props) => {
-        this.props.activateGeod({
-            active: null
-        });
-
-    };
-
 
     render() {
         return (
@@ -216,14 +202,6 @@ const LoadingContainer = (props) => (
 
 export class IFrame extends React.Component {
 
-    constructor(props) {
-
-        super(props);
-
-        this.loadData("https://www.google.com/maps?cbll=-36.0851437761,146.917419491&cbp=12,90,0,0,5&layer=c");
-    }
-
-
     loadData = (url) => {
 
         console.log("girdi.");
@@ -244,6 +222,12 @@ export class IFrame extends React.Component {
             });
     };
 
+    constructor(props) {
+
+        super(props);
+
+        this.loadData("https://www.google.com/maps?cbll=-36.0851437761,146.917419491&cbp=12,90,0,0,5&layer=c");
+    }
 
     iframe() {
         return {

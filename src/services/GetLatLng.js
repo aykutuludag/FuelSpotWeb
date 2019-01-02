@@ -1,8 +1,8 @@
 export function GetLatLng() {
 
-    return new Promise(function(success, error) {
+    return new Promise(function (success, error) {
 
-        if (!navigator.geolocation){
+        if (!navigator.geolocation) {
             window.alert("Hata: Tarayıcınız geolocation desteklemiyor");
             return;
         }

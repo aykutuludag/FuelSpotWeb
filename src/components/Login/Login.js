@@ -5,7 +5,7 @@ import './Login.css';
 
 
 class Login extends Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
             username: '',
@@ -18,11 +18,11 @@ class Login extends Component {
 
 
     login() {
-        if(this.state.username && this.state.password){
-            PostData('login',this.state).then((result) => {
+        if (this.state.username && this.state.password) {
+            PostData('login', this.state).then((result) => {
                 let responseJson = result;
-                if(responseJson.userData){
-                    sessionStorage.setItem('userData',JSON.stringify(responseJson));
+                if (responseJson.userData) {
+                    sessionStorage.setItem('userData', JSON.stringify(responseJson));
                     this.setState({redirectToReferrer: true});
                 }
             });
@@ -30,13 +30,14 @@ class Login extends Component {
     }
 
 
-    onChange(e){
-        this.setState({[e.target.name]:e.target.value});
+    onChange(e) {
+        this.setState({[e.target.name]: e.target.value});
     }
+
     render() {
 
 
-        if (this.state.redirectToReferrer || sessionStorage.getItem('userData')){
+        if (this.state.redirectToReferrer || sessionStorage.getItem('userData')) {
             return (<Redirect to={'/home'}/>)
         }
 
@@ -56,4 +57,5 @@ class Login extends Component {
         );
     }
 }
+
 export default Login;

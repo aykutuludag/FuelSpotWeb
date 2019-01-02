@@ -1,6 +1,6 @@
 export function GetGeoCode(USER_POSITION) {
 
-    return new Promise(function(success, error) {
+    return new Promise(function (success, error) {
 
         var onScriptLoad = () => {
 
@@ -77,21 +77,18 @@ export function GetGeoCode(USER_POSITION) {
                         };
 
 
-
                         fetch(url, params)
                             .then(response => response.json())
                             .then(
                                 (USER_TAXES) => {
 
-                                    let GEO_CODE = [ USER_COUNTRY_SHORT_CODE, USER_LANGUAGE[0], USER_CURRENCIES, USER_UNIT, USER_TAXES[0] ];
+                                    let GEO_CODE = [USER_COUNTRY_SHORT_CODE, USER_LANGUAGE[0], USER_CURRENCIES, USER_UNIT, USER_TAXES[0]];
                                     success(GEO_CODE);
                                 }
                             )
                             .catch(err => {
                                 console.error("Other-tax api fetch hatası.", err)
                             })
-
-
 
 
                     } else {
@@ -104,7 +101,6 @@ export function GetGeoCode(USER_POSITION) {
 
 
         };
-
 
 
         if (!window.google) {
@@ -122,7 +118,7 @@ export function GetGeoCode(USER_POSITION) {
             onScriptLoad()
         }
 
-});
+    });
 
 
 }

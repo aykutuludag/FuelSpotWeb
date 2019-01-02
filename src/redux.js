@@ -1,5 +1,4 @@
-import { combineReducers, createStore } from 'redux';
-
+import {combineReducers, createStore} from 'redux';
 
 
 // actions.js
@@ -12,9 +11,6 @@ export const activateStation = station => ({
     type: 'ACTIVATE_STATION',
     station
 });
-
-
-
 
 
 // reducers.js
@@ -37,13 +33,10 @@ export const stations = (state = {}, action) => {
 };
 
 
-
 export const reducers = combineReducers({
     geod,
     stations
 });
-
-
 
 
 // store.js

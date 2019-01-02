@@ -5,10 +5,10 @@ import * as serviceWorker from './serviceWorker';
 import './bootstrap.css';
 import './index.css';
 
-import { store } from './redux';
+import {store} from './redux';
 
 ReactDOM.render(
-    <Root store={store} />,
+    <Root store={store}/>,
     document.getElementById('root')
 );
 
